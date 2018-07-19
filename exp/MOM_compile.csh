@@ -1,7 +1,7 @@
 #!/bin/csh -f
 # Minimal compile script for fully coupled model CM2M experiments
 
-set platform      = gfortran    # A unique identifier for your platfo
+set platform      = intel_aditya    # A unique identifier for your platfo
                                 # This corresponds to the mkmf templates in $root/bin dir.
 set type          = MOM_solo    # Type of the experiment
 set unit_testing = 0
@@ -98,7 +98,7 @@ source $root/bin/environs.$platform  # environment variables and loadable module
 #
 # compile mppnccombine.c, needed only if $npes > 1
 if ( ! -f $mppnccombine ) then
-    cc -O -o $mppnccombine -I/usr/local/include -L/usr/local/lib $code_dir/postprocessing/mppnccombine/mppnccombine.c -lm -lnetcdf
+    cc -O -o $mppnccombine  -I/iitm3/erpas-res/rphani/lib/sorc/netcdf-3.6.3/include -L/iitm3/erpas-res/rphani/lib/sorc/netcdf-3.6.3/lib  $code_dir/postprocessing/mppnccombine/mppnccombine.c  -lnetcdf
 endif
 
 set mkmf_lib = "$mkmf -f -m Makefile -a $code_dir -t $mkmfTemplate"
@@ -193,7 +193,7 @@ else if( $type == ESM2M ) then
     set libs = "$executable:h:h/lib_ocean/lib_ocean.a $executable:h:h/lib_ice/lib_ice.a $executable:h:h/lib_atmos_fv/lib_atmos_fv.a $executable:h:h/lib_atmos_phys/lib_atmos_phys.a $executable:h:h/lib_land_lad2/lib_land_lad2.a $executable:h:h/lib_FMS/lib_FMS.a"
 else if( $type == ICCM ) then
     set srcList = ( coupler )
-    set includes = "$includes -I$executable:h:h/lib_ice -I$executable:h:h/lib_atmos_bg -I$executable:h:h/lib_atmos_phys -I$executable:h:h/lib_land_lad" 
+    set includes = "$includes -I$executable:h:h/lib_ice -I$executable:h:h/lib_atmos_bg -I$executable:h:h/lib_atmos_phys -I$executable:h:h/lib_land_lad"
     set libs = "$executable:h:h/lib_ocean/lib_ocean.a $executable:h:h/lib_ice/lib_ice.a $executable:h:h/lib_atmos_bg/lib_atmos_bg.a $executable:h:h/lib_atmos_phys/lib_atmos_phys.a $executable:h:h/lib_land_lad/lib_land_lad.a $executable:h:h/lib_FMS/lib_FMS.a"
 else
     echo "Error: unsupported model type, please see model types in ./MOM_compile.sh --help"
